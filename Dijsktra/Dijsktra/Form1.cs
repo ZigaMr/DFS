@@ -22,41 +22,19 @@ namespace Dijsktra
         Point zadnjaLokacija;   //hrani zadnjo lokacijo miške
         bool risem;             //stikalo za risanje
         List<Point> Coords = new List<Point>();
-        //List<>
-        /*
-        int Counter = 0;
-        private const double _diameter = 30;
-        private const double _edgeLabelSize = 20;
 
-        private const int _fontSize = 12;
-        private const int _edgeFontSize = 10;
-
-
-
-
-        private Node _edgeNode1, _edgeNode2;
-        private SolidBrush _unvisitedBrush, _visitedBrush;
-        private bool _isGraphConnected;
-        Color customColor = Color.FromArgb(50, Color.Gray);
-        */
         public static int steviloVozlisc;
-        //public static int steviloPovezav;
 
         public Form1()
         {
             InitializeComponent();
             risem = false;
 
-            //_isGraphConnected = true;
-
-            //_unvisitedBrush = new SolidBrush(customColor);
-            //_visitedBrush = new SolidBrush(customColor);
             // Povežemo dogodke z metodami
 
             Load += novoOzadje;
             platno.MouseClick += klikMiske;
             platno.MouseDoubleClick += novoOzadje;
-            //button3.Click += my_handler;
         }
 
         private void novoOzadje(object sender, EventArgs e)
@@ -109,7 +87,6 @@ namespace Dijsktra
         {
             string st_vozlisc;
             var formPopup = new PopupForm();
-            //formPopup.
             formPopup.Show(this); // if you need non-modal window
             
         }
@@ -133,7 +110,6 @@ namespace Dijsktra
                 Coords.Add(new Point(X, Y));
 
                 g.DrawString(i.ToString(), new Font("Papyrus", 12), Brushes.Black, new Point(X, Y));
-                //AdjacencyList[i] = new List<int>();
                 platno.Invalidate();
             }
 
@@ -289,6 +265,11 @@ namespace Dijsktra
             this.Invalidate();
             AdjacencyList.Clear();
             Coords.Clear();
+            this.Invoke((Action)delegate
+            {
+                listBox1.Items.Clear();
+                listBox2.Items.Clear();
+            });
             return;
         }
 
@@ -317,7 +298,6 @@ namespace Dijsktra
             listBox2.Items.Clear();
             this.generate_graph(steviloVozlisc);//, steviloPovezav);
             this.draw_edges();
-            //button3.Enabled = false;
 
             Thread nit = new Thread(DFS);
             nit.Start();
