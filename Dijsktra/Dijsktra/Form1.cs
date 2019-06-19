@@ -46,7 +46,7 @@ namespace Dijsktra
         {
             foreach(var point in Coords)
             {
-                if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 20*20)
+                if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 200*200)
                 {
                     return;
                 }
@@ -91,6 +91,18 @@ namespace Dijsktra
             
         }
 
+        private bool check_coords(int X, int Y)
+        {
+            foreach (var point in Coords)
+            {
+                if (((point.X - X) * (point.X - X) + (Y - point.Y) * (Y - point.Y)) < 50 * 50)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public void generate_graph(int stVozlisc)//, int stPovezav)
         {
             Graphics g;
@@ -99,13 +111,18 @@ namespace Dijsktra
             Rectangle rectangle = new Rectangle();
             PaintEventArgs arg = new PaintEventArgs(g, rectangle);
             Random rnd = new Random();
+
             int X;
             int Y;
             for (int i=0; i < steviloVozlisc; i++)
             {
                 X = rnd.Next(100, 500);
                 Y = rnd.Next(100, 400);
-
+                while (!check_coords(X, Y))
+                {
+                    X = rnd.Next(100, 500);
+                    Y = rnd.Next(100, 400);
+                }
                 DrawCircle(arg, X, Y, 10, 10, Color.Red);
                 Coords.Add(new Point(X, Y));
 
