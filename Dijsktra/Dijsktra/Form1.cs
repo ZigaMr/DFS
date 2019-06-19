@@ -46,7 +46,7 @@ namespace Dijsktra
         {
             foreach(var point in Coords)
             {
-                if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 200*200)
+                if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 500*500)
                 {
                     return;
                 }
@@ -91,11 +91,11 @@ namespace Dijsktra
             
         }
 
-        private bool check_coords(int X, int Y)
+        private bool check_coords(int X, int Y, decimal n)
         {
             foreach (var point in Coords)
             {
-                if (((point.X - X) * (point.X - X) + (Y - point.Y) * (Y - point.Y)) < 50 * 50)
+                if (((point.X - X) * (point.X - X) + (Y - point.Y) * (Y - point.Y)) < n * n)
                 {
                     return false;
                 }
@@ -114,15 +114,21 @@ namespace Dijsktra
 
             int X;
             int Y;
+            int counter = 0;//counter-uporabimo, ker vcasih zmanjka prostora in se ustvari neskoncna zanka, 
+                            //ki nikoli ne najde ustreznih vozlišč(ni prostora na canvas)
             for (int i=0; i < steviloVozlisc; i++)
             {
                 X = rnd.Next(100, 500);
                 Y = rnd.Next(100, 400);
-                while (!check_coords(X, Y))
+                counter = 1;
+                decimal n = 200;
+                while (!check_coords(X, Y, n/counter) & counter < 10)
                 {
                     X = rnd.Next(100, 500);
                     Y = rnd.Next(100, 400);
+                    counter++;
                 }
+                
                 DrawCircle(arg, X, Y, 10, 10, Color.Red);
                 Coords.Add(new Point(X, Y));
 
@@ -278,6 +284,7 @@ namespace Dijsktra
 
 
             }
+
             arg.Graphics.Clear(Color.White);
             this.Invalidate();
             AdjacencyList.Clear();
@@ -286,6 +293,8 @@ namespace Dijsktra
             {
                 listBox1.Items.Clear();
                 listBox2.Items.Clear();
+                var formPopup = new PopupForm2();
+                formPopup.Show(this); // if you need non-modal window
             });
             return;
         }
@@ -318,6 +327,7 @@ namespace Dijsktra
 
             Thread nit = new Thread(DFS);
             nit.Start();
+
 
         }
 
