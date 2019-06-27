@@ -8,14 +8,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Dijkstra.Classes;
-using Microsoft.VisualBasic;
-using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Dijsktra
 {
     public partial class Form1 : Form
     {
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool TerminateThread(IntPtr hThread, uint dwExitCode);
         Dictionary<int, List<int>> AdjacencyList = new Dictionary<int, List<int>>();
         public static ManualResetEvent mre = new ManualResetEvent(true);
 
@@ -199,14 +203,13 @@ namespace Dijsktra
             }
         }
 
-        public void DFS()
+        public void DFS(Object stateInfo)
         {
             int start = 0;
             this.Invoke((Action)delegate
             {
                 listBox1.Items.Clear();
             });
-            Thread.Sleep(10);
             Graphics g;
             g = Graphics.FromImage(platno.Image);
 
@@ -253,7 +256,6 @@ namespace Dijsktra
                 });
 
                 visited.Add(vertex);
-                Thread.Sleep(10);
 
                 this.Invoke((Action)delegate
                 {
@@ -308,7 +310,7 @@ namespace Dijsktra
             this.Invalidate();
         }
 
-
+         
         private void button2_Click(object sender, EventArgs e)
         {
             Graphics g;
@@ -322,11 +324,33 @@ namespace Dijsktra
             Coords.Clear();
             listBox1.Items.Clear();
             listBox2.Items.Clear();
+
+            //foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
+            //{
+            //    IntPtr ptrThread = OpenThread(1, false, (uint)pt.Id);
+            //    string ax=pt.GetType().ToString();
+            //    if ((AppDomain.GetCurrentThreadId() != pt.Id))// & pt.CurrentPriority < 10)
+            //    {
+            //        try
+            //        {
+            //            TerminateThread(ptrThread, 1);
+            //        }
+            //        catch (Exception exc)
+            //        {
+            //            continue;
+            //        }
+            //    }
+
+            //}
+
+
             this.generate_graph(steviloVozlisc);//, steviloPovezav);
             this.draw_edges();
 
+            //ThreadPool.QueueUserWorkItem(DFS);
             Thread nit = new Thread(DFS);
             nit.Start();
+            //nit.Abort();
 
 
         }
