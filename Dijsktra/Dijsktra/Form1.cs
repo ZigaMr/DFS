@@ -14,18 +14,19 @@ namespace Dijsktra
 {
     public partial class Form1 : Form
     {
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
 
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static extern bool TerminateThread(IntPtr hThread, uint dwExitCode);
         Dictionary<int, List<int>> AdjacencyList = new Dictionary<int, List<int>>();
         public static ManualResetEvent mre = new ManualResetEvent(true);
 
         Point zadnjaLokacija;   //hrani zadnjo lokacijo miške
         bool risem;             //stikalo za risanje
         List<Point> Coords = new List<Point>();
+        Stack<int> stack = new Stack<int>();
+        int start;
+        List<int> visited = new List<int>();
+        List<int> helper = new List<int>();
+        int vertex;
+        int counter;
 
         public static int steviloVozlisc;
 
@@ -47,7 +48,7 @@ namespace Dijsktra
         }
 
         private void klikMiske(object sender, MouseEventArgs e)
-        {
+        { 
             foreach(var point in Coords)
             {
                 if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 500*500)
@@ -203,13 +204,12 @@ namespace Dijsktra
             }
         }
 
-        public void DFS(Object stateInfo)
+        public void DFS()
         {
             int start = 0;
-            this.Invoke((Action)delegate
-            {
-                listBox1.Items.Clear();
-            });
+            
+            listBox1.Items.Clear();
+            
             Graphics g;
             g = Graphics.FromImage(platno.Image);
 
@@ -249,18 +249,11 @@ namespace Dijsktra
                 platno.Invalidate();
 
 
-                //Poklicemo event handler zunaj naše niti
-                this.Invoke((Action)delegate
-                {
-                    listBox1.Items.Add(vertex.ToString());
-                });
+                listBox1.Items.Add(vertex.ToString());
 
                 visited.Add(vertex);
 
-                this.Invoke((Action)delegate
-                {
-                    listBox2.Items.Clear();
-                });
+                listBox2.Items.Clear();
                 foreach (var neighbor in AdjacencyList[vertex])
                 {
                     
@@ -283,34 +276,94 @@ namespace Dijsktra
 
                 DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Blue);
 
-
-
             }
 
             arg.Graphics.Clear(Color.White);
             this.Invalidate();
             AdjacencyList.Clear();
             Coords.Clear();
-            this.Invoke((Action)delegate
+
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
+            var formPopup = new PopupForm2();
+            formPopup.Show(this); 
+            return;
+        }
+           
+        //Next button
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Graphics g;
+            g = Graphics.FromImage(platno.Image);
+
+            Rectangle rectangle = new Rectangle();
+            PaintEventArgs arg = new PaintEventArgs(g, rectangle);
+            if (counter == 0 & stack.Count > 0)
             {
+                DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Blue);
+                vertex = stack.Pop();
+                if (visited.Contains(vertex))
+                    return;
+                DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Yellow);
+                platno.Invalidate();
+                counter = 1;
+            }
+               else if (counter == 1)
+            {
+                foreach (var h in helper)
+                {
+                    DrawCircle(arg, Coords[h].X, Coords[h].Y, 10, 10, Color.Red);
+                }
+
+                helper.Clear();
+
+
+                DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Orange);
+                platno.Invalidate();
+
+
+                listBox1.Items.Add(vertex.ToString());
+
+                visited.Add(vertex);
+
+                listBox2.Items.Clear( );
+                foreach (var neighbor in AdjacencyList[vertex])
+                {
+
+                    if (!visited.Contains(neighbor))
+                    {
+                        helper.Add(neighbor);
+                        DrawCircle(arg, Coords[neighbor].X, Coords[neighbor].Y, 10, 10, Color.DarkGreen);
+                        platno.Invalidate();
+                        stack.Push(neighbor);
+                        listBox2.Items.Add(neighbor.ToString());
+
+                    }
+
+                }
+                counter = 0;
+            }
+
+            else
+            {
+                arg.Graphics.Clear(Color.White);
+                this.Invalidate();
+                AdjacencyList.Clear();
+                Coords.Clear();
                 listBox1.Items.Clear();
                 listBox2.Items.Clear();
                 var formPopup = new PopupForm2();
-                formPopup.Show(this); // if you need non-modal window
-            });
-            return;
-        }
+                formPopup.Show(this); 
+            }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            mre.Set();
+            return;
         }
         private void deleteGraph(object sender, EventArgs e)
         {
             this.Invalidate();
         }
 
-         
+        //Start gumb
         private void button2_Click(object sender, EventArgs e)
         {
             Graphics g;
@@ -325,32 +378,24 @@ namespace Dijsktra
             listBox1.Items.Clear();
             listBox2.Items.Clear();
 
-            //foreach (ProcessThread pt in Process.GetCurrentProcess().Threads)
-            //{
-            //    IntPtr ptrThread = OpenThread(1, false, (uint)pt.Id);
-            //    string ax=pt.GetType().ToString();
-            //    if ((AppDomain.GetCurrentThreadId() != pt.Id))// & pt.CurrentPriority < 10)
-            //    {
-            //        try
-            //        {
-            //            TerminateThread(ptrThread, 1);
-            //        }
-            //        catch (Exception exc)
-            //        {
-            //            continue;
-            //        }
-            //    }
+            start = 0;
+            listBox1.Items.Clear();
+            Pen pen = new Pen(Color.Yellow, 5);
 
-            //}
-
+            visited.Clear();
+            stack.Clear();
+            stack.Push(start);
+            helper.Clear();
+            counter = 0;
 
             this.generate_graph(steviloVozlisc);//, steviloPovezav);
             this.draw_edges();
 
-            //ThreadPool.QueueUserWorkItem(DFS);
-            Thread nit = new Thread(DFS);
-            nit.Start();
-            //nit.Abort();
+            //vertex = stack.Pop();
+            //DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Yellow);
+            platno.Invalidate();
+            //DFS();
+
 
 
         }
