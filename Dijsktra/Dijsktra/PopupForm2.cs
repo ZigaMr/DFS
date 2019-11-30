@@ -14,17 +14,28 @@ namespace Dijsktra
     {
         public PopupForm2()
         {
+
+            //mainForm = callingForm as Form1;
             InitializeComponent();
         }
         public PopupForm2(Form callingForm)
         {
-            //mainForm = callingForm as Form1;
             InitializeComponent();
         }
 
 
         private void button1_Click(object sender, EventArgs e)
         {
+            InitializeComponent();
+
+            if (System.Windows.Forms.Application.OpenForms["Form1"] != null)
+            {
+
+                (System.Windows.Forms.Application.OpenForms["Form1"] as Form1).Show();
+                (System.Windows.Forms.Application.OpenForms["Form1"] as Form1).deleteGraph();
+                //(System.Windows.Forms.Application.OpenForms["Form1"] as Form1).generate_graph(Form1.steviloVozlisc);
+                //(System.Windows.Forms.Application.OpenForms["Form1"] as Form1).draw_edges();
+            }
             this.Close();
         }
     }

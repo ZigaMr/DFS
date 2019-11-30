@@ -20,6 +20,7 @@ namespace Dijsktra
         {
             //mainForm = callingForm as Form1;
             InitializeComponent();
+            
         }
         private void PopupForm_Load(object sender, EventArgs e)
         {
@@ -35,6 +36,7 @@ namespace Dijsktra
             //Form1.steviloPovezav = int.Parse(textBox1.Text);
             //Form1.generate_graph(Form1.steviloVozlisc, Form1.steviloPovezav);
             this.Close();
+            (System.Windows.Forms.Application.OpenForms["Form1"] as Form1).Show();
 
         }
 

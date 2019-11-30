@@ -41,6 +41,8 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.platno)).BeginInit();
             this.SuspendLayout();
             // 
@@ -51,7 +53,7 @@
             this.platno.Location = new System.Drawing.Point(0, 0);
             this.platno.Margin = new System.Windows.Forms.Padding(2);
             this.platno.Name = "platno";
-            this.platno.Size = new System.Drawing.Size(777, 521);
+            this.platno.Size = new System.Drawing.Size(947, 521);
             this.platno.TabIndex = 1;
             this.platno.TabStop = false;
             // 
@@ -126,7 +128,7 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(508, 259);
+            this.richTextBox1.Location = new System.Drawing.Point(508, 262);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(257, 230);
             this.richTextBox1.TabIndex = 12;
@@ -137,12 +139,32 @@
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
+            // listBox3
+            // 
+            this.listBox3.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(781, 42);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(127, 446);
+            this.listBox3.TabIndex = 13;
+            // 
+            // textBox3
+            // 
+            this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox3.Location = new System.Drawing.Point(781, 12);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(127, 20);
+            this.textBox3.TabIndex = 14;
+            this.textBox3.Text = "DFS sklad";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(777, 521);
+            this.ClientSize = new System.Drawing.Size(947, 521);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.listBox3);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.listBox2);
@@ -175,6 +197,8 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.TextBox textBox3;
     }
 
 }
