@@ -41,13 +41,45 @@ namespace DFS
             risem = false;
 
             // Povežemo dogodke z metodami
-
+            dataGridView1.EnableHeadersVisualStyles = false;
             Load += novoOzadje;
         }
 
         private void novoOzadje(object sender, EventArgs e)
         {
             platno.Image = new Bitmap(platno.Size.Width, platno.Size.Height);
+        }
+
+        private void posodobi_matriko(int visina, int sirina)
+        {
+            dataGridView1.ColumnCount = visina;
+
+            for (int r = 0; r < visina; r++)
+            {
+                dataGridView1.Columns[r].Width = 25;
+                dataGridView1.Columns[r].Name = r.ToString();
+                DataGridViewRow row = new DataGridViewRow();
+                row.CreateCells(dataGridView1);
+
+                for (int c = 0; c < sirina; c++)
+                {
+                    if (AdjacencyList[r].Contains(c))
+                    {
+                        row.Cells[c].Value = 1;
+                    }
+                    
+                }
+                
+                dataGridView1.Rows.Add(row);
+                dataGridView1.Rows[r].Height = 25;
+                dataGridView1.Rows[r].HeaderCell.Value = r.ToString();
+            }
+            DataGridViewElementStates states = DataGridViewElementStates.None;
+            dataGridView1.ScrollBars = ScrollBars.None;
+            var totalHeight = dataGridView1.Rows.GetRowsHeight(states) + dataGridView1.ColumnHeadersHeight;
+            totalHeight += dataGridView1.Rows.Count * 4;  // a correction I need
+            var totalWidth = dataGridView1.Columns.GetColumnsWidth(states) + dataGridView1.RowHeadersWidth;
+            dataGridView1.ClientSize = new Size(totalWidth, totalHeight);
         }
 
         private void DrawCircle(PaintEventArgs e, int x, int y, int width, int height, Color clr)
@@ -116,7 +148,8 @@ namespace DFS
             }
 
         }
-        public void draw_edges()
+
+        public int draw_edges()
         {
             Graphics g;
             g = Graphics.FromImage(platno.Image);
@@ -168,24 +201,48 @@ namespace DFS
                 {
                     var xcor2 = Coords[x].X;
                     var ycor2 = Coords[x].Y;
-
-                    arg.Graphics.DrawLine(pen, xcor, ycor, xcor2, ycor2);
+                    c = (float)Math.Sqrt(Math.Pow(xcor2 - xcor, 2) + Math.Pow(ycor2 - ycor, 2));
+                    x_delta = 10 * (xcor - xcor2) / c;
+                    y_delta = 10 * (ycor - ycor2) / c;
+                    arg.Graphics.DrawLine(pen, xcor - x_delta, ycor - y_delta, xcor2 + x_delta, ycor2 + y_delta);
+                    //arg.Graphics.DrawLine(pen, xcor, ycor, xcor2, ycor2);
                     platno.Invalidate();
                 }
 
 
             }
+            return Coords.Count; 
         }
 
            
         //Next gumb
         private void button3_Click(object sender, EventArgs e)
         {
-
             Graphics g;
             g = Graphics.FromImage(platno.Image);
             Rectangle rectangle = new Rectangle();
             PaintEventArgs arg = new PaintEventArgs(g, rectangle);
+
+            if (steviloVozlisc < 2)
+            {
+                g.DrawString("Premalo vozlišč", new Font("Arial", 32, FontStyle.Bold), Brushes.Black, new Point(100, 300));
+                platno.Invalidate();
+                return;
+            }
+
+            dataGridView1.SuspendLayout();
+
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                row.HeaderCell.Style.BackColor = Color.Empty;
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    if(cell.Style.BackColor != Color.LightSkyBlue)
+                        cell.Style.BackColor = Color.Empty;
+                }
+            }
+            dataGridView1.ResumeLayout();
+
             if (AdjacencyList.Count == 0)
             {
                 arg.Graphics.Clear(Color.White);
@@ -196,6 +253,7 @@ namespace DFS
 
             if (counter == 0 & stack.Count > 0)
             {
+
                 neobiskani_sosedje.Clear();
                 DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.LightSkyBlue);
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X -5, Coords[vertex].Y - 5));
@@ -232,6 +290,9 @@ namespace DFS
                 x_delta = 10 * (xcor - xcor2)/c;
                 y_delta = 10 * (ycor - ycor2)/c;
                 arg.Graphics.DrawLine(pen, xcor-x_delta, ycor-y_delta, xcor2+x_delta, ycor2+y_delta);
+                dataGridView1.EnableHeadersVisualStyles = false;
+                dataGridView1.Rows[vertex].HeaderCell.Style.BackColor = Color.Red;
+                dataGridView1.Rows[i].Cells[vertex].Style.BackColor = Color.LightSkyBlue;
                 //DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Yellow);
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X - 5, Coords[vertex].Y - 5));
                 platno.Invalidate();
@@ -267,6 +328,7 @@ namespace DFS
 
                 visited.Add(vertex);
                 neobiskani_sosedje.Clear();
+                dataGridView1.Rows[vertex].HeaderCell.Style.BackColor = Color.Red;
                 foreach (var neighbor in AdjacencyList[vertex])
                 {
                     
@@ -274,6 +336,7 @@ namespace DFS
                     {
                         helper.Add(neighbor);
                         DrawCircle(arg, Coords[neighbor].X, Coords[neighbor].Y, 20, 20, Color.LightSeaGreen);
+                        dataGridView1.Rows[vertex].Cells[neighbor].Style.BackColor = Color.LightSeaGreen;
                         g.DrawString(neighbor.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[neighbor].X - 5, Coords[neighbor].Y - 5));
                         platno.Invalidate();
                         stack.Push(neighbor);
@@ -282,6 +345,7 @@ namespace DFS
                     }
 
                 }
+
                 if(neobiskani_sosedje.Count == 0)
                 {
                     richTextBox2.Text = "Vozlišče " + vertex.ToString() + " nima neobiskanih sosedov. \nNadaljujemo pri zadnjem dodanem vozlišču v skladu";
@@ -338,6 +402,7 @@ namespace DFS
         //Generiraj gumb
         public void button2_Click(object sender, EventArgs e)
         {
+            dataGridView1.Rows.Clear();
             Graphics g;
             g = Graphics.FromImage(platno.Image);
 
@@ -369,7 +434,12 @@ namespace DFS
             CoordStack.Clear();
 
             this.generate_graph(steviloVozlisc);
-            this.draw_edges();
+            int sirina = this.draw_edges();
+            posodobi_matriko(sirina, sirina);
+            //dataGridView1.Anchor = (AnchorStyles.Bottom | AnchorStyles.Right);
+            //dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+
+
 
             platno.Invalidate();
         }

@@ -43,7 +43,9 @@
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.listBox3 = new System.Windows.Forms.ListBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.platno)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // platno
@@ -53,7 +55,7 @@
             this.platno.Location = new System.Drawing.Point(0, 0);
             this.platno.Margin = new System.Windows.Forms.Padding(2);
             this.platno.Name = "platno";
-            this.platno.Size = new System.Drawing.Size(1092, 521);
+            this.platno.Size = new System.Drawing.Size(1332, 521);
             this.platno.TabIndex = 1;
             this.platno.TabStop = false;
             // 
@@ -122,7 +124,7 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(508, 262);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(257, 230);
+            this.richTextBox1.Size = new System.Drawing.Size(400, 226);
             this.richTextBox1.TabIndex = 12;
             this.richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
@@ -146,7 +148,7 @@
             this.listBox3.FormattingEnabled = true;
             this.listBox3.Location = new System.Drawing.Point(781, 42);
             this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(127, 446);
+            this.listBox3.Size = new System.Drawing.Size(127, 173);
             this.listBox3.TabIndex = 13;
             // 
             // richTextBox2
@@ -157,12 +159,22 @@
             this.richTextBox2.TabIndex = 15;
             this.richTextBox2.Text = "";
             // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(932, 42);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            this.dataGridView1.Size = new System.Drawing.Size(388, 446);
+            this.dataGridView1.TabIndex = 16;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1092, 521);
+            this.ClientSize = new System.Drawing.Size(1332, 521);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.listBox3);
@@ -179,6 +191,7 @@
             this.Text = "Slikar";
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.platno)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,6 +212,7 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.ListBox listBox3;
         private System.Windows.Forms.RichTextBox richTextBox2;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 
 }

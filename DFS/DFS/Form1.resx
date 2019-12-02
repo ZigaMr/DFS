@@ -121,19 +121,16 @@
     <value>17, 17</value>
   </metadata>
   <data name="richTextBox1.Text" xml:space="preserve">
-    <value>Modro vozlišče - Obiskano vozlišče
+    <value>Svetlo modro vozlišče - Obiskano vozlišče
 Oranžno vozlišče - Trenutna lokacija algoritma
-Zeleno vozlišče - Neobiskani sosedje
-Rumeno vozlišče - Naslednja lokacija algoritma
+Svetlo zeleno vozlišče - Neobiskani sosedje
+Rdeče vozlišče - Neobiskana vozlišča, ki ne mejijo na trenutno vozlišče
 
 Navodila:
-     -Kliknemo Začetek za zagon in izberemo število vozlišč(zaenkrat podprta samo neusmerjena vozlišča)
+     -Kliknemo Začetek za zagon in izberemo število vozlišč
      -Kliknemo Generiraj graf, ki prikaze naključno ustvarjen graf
      -S klikom Naprej se premikamo skozi faze algoritma in spremljamo izpis vozlišč zgoraj desno
-
-Zaradi uporabe več niti je lahko program nestabilen, včasih ga je treba ugasniti "na silo".
-V končni verziji bo napaka popravljena.
-</value>
+Desno je pikazan graf v matrični obliki.</value>
   </data>
   <metadata name="contextMenuStrip2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>172, 17</value>
