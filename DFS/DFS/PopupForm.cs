@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Dijsktra
+namespace DFS
 {
     public partial class PopupForm : Form
     {

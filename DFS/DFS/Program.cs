@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using Dijkstra.Classes;
 using System.Drawing;
 
-namespace Dijsktra
+namespace DFS
 {
     static class Program
     {

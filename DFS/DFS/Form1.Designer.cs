@@ -1,4 +1,4 @@
-﻿namespace Dijsktra
+﻿namespace DFS
 {
     partial class Form1
     {
@@ -37,12 +37,12 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.listBox2 = new System.Windows.Forms.ListBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.listBox3 = new System.Windows.Forms.ListBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.platno)).BeginInit();
             this.SuspendLayout();
             // 
@@ -53,7 +53,7 @@
             this.platno.Location = new System.Drawing.Point(0, 0);
             this.platno.Margin = new System.Windows.Forms.Padding(2);
             this.platno.Name = "platno";
-            this.platno.Size = new System.Drawing.Size(947, 521);
+            this.platno.Size = new System.Drawing.Size(1092, 521);
             this.platno.TabIndex = 1;
             this.platno.TabStop = false;
             // 
@@ -109,14 +109,6 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // listBox2
-            // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(638, 42);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(127, 173);
-            this.listBox2.TabIndex = 10;
-            // 
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -139,15 +131,6 @@
             this.contextMenuStrip2.Name = "contextMenuStrip2";
             this.contextMenuStrip2.Size = new System.Drawing.Size(61, 4);
             // 
-            // listBox3
-            // 
-            this.listBox3.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
-            this.listBox3.FormattingEnabled = true;
-            this.listBox3.Location = new System.Drawing.Point(781, 42);
-            this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(127, 446);
-            this.listBox3.TabIndex = 13;
-            // 
             // textBox3
             // 
             this.textBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -157,17 +140,34 @@
             this.textBox3.TabIndex = 14;
             this.textBox3.Text = "DFS sklad";
             // 
+            // listBox3
+            // 
+            this.listBox3.AccessibleRole = System.Windows.Forms.AccessibleRole.ScrollBar;
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(781, 42);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(127, 446);
+            this.listBox3.TabIndex = 13;
+            // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Location = new System.Drawing.Point(638, 42);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(127, 173);
+            this.richTextBox2.TabIndex = 15;
+            this.richTextBox2.Text = "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(947, 521);
+            this.ClientSize = new System.Drawing.Size(1092, 521);
+            this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.listBox3);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.listBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.button3);
@@ -193,12 +193,12 @@
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
-        private System.Windows.Forms.ListBox listBox3;
         private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.RichTextBox richTextBox2;
     }
 
 }

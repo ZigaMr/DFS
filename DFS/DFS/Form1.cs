@@ -10,7 +10,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-namespace Dijsktra
+namespace DFS
 {
     public partial class Form1 : Form
     {
@@ -26,6 +26,7 @@ namespace Dijsktra
 
         int start;
         List<int> visited = new List<int>();
+        List<int> neobiskani_sosedje = new List<int>();
         int xcor2, ycor2, ycor, xcor;
         int vertex;
         int counter;
@@ -42,40 +43,11 @@ namespace Dijsktra
             // Povežemo dogodke z metodami
 
             Load += novoOzadje;
-            platno.MouseClick += klikMiske;
-            platno.MouseDoubleClick += novoOzadje;
         }
 
         private void novoOzadje(object sender, EventArgs e)
         {
             platno.Image = new Bitmap(platno.Size.Width, platno.Size.Height);
-        }
-
-        private void klikMiske(object sender, MouseEventArgs e)
-        { 
-            foreach(var point in Coords)
-            {
-                if (((point.X - e.X) * (point.X - e.X) + (e.Y - point.Y) * (e.Y - point.Y)) < 500*500)
-                {
-                    return;
-                }
-            }
-            Point clickPoint = e.Location;
-        
-
-            //Counter++;
-            int x = e.X;
-            int y = e.Y;
-            Coords.Add(new Point(e.X, e.Y));
-
-            Graphics g;
-            g = Graphics.FromImage(platno.Image);
-
-            Rectangle rectangle = new Rectangle();
-            PaintEventArgs arg = new PaintEventArgs(g, rectangle);
-
-            DrawCircle(arg, x, y, 20, 20, Color.Red);
-            platno.Invalidate();
         }
 
         private void DrawCircle(PaintEventArgs e, int x, int y, int width, int height, Color clr)
@@ -91,7 +63,7 @@ namespace Dijsktra
         {
 
         }
-        //Start gumb
+        //Začetek gumb
         private void button1_Click(object sender, EventArgs e)
         {
             string st_vozlisc;
@@ -151,7 +123,7 @@ namespace Dijsktra
 
             Rectangle rectangle = new Rectangle();
             PaintEventArgs arg = new PaintEventArgs(g, rectangle);
-            for (int i=0; i < Coords.Count(); i++)
+            for (int i = 0; i < Coords.Count(); i++)
             {
                 AdjacencyList[i] = new List<int>();
             }
@@ -164,14 +136,21 @@ namespace Dijsktra
                 int r1 = rnd.Next(0,possible.Count);
                 int r2 = 0;
 
-                AdjacencyList[i].Add(possible[r1]);
+                if (!AdjacencyList[i].Contains(r1))
+                {
+                    AdjacencyList[i].Add(possible[r1]);
+                }
 
                 int nxt = rnd.Next(0, 2);
                 if (nxt == 1)
                 {
                     r2 = rnd.Next(0, possible.Count);
                 }
-                AdjacencyList[i].Add(possible[r2]);
+
+                if (!AdjacencyList[i].Contains(r2))
+                {
+                    AdjacencyList[i].Add(possible[r2]);
+                }
 
                 Pen pen = new Pen(Color.Green, 2);
 
@@ -217,6 +196,7 @@ namespace Dijsktra
 
             if (counter == 0 & stack.Count > 0)
             {
+                neobiskani_sosedje.Clear();
                 DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.LightSkyBlue);
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X -5, Coords[vertex].Y - 5));
                 xcor = Coords[vertex].X;
@@ -224,6 +204,7 @@ namespace Dijsktra
                 CoordStack.Push(vertex);
                 vertex = stack.Pop();
                 listBox3.Items.RemoveAt(listBox3.Items.Count - 1);
+                richTextBox2.Text = "Naslednje vozlišče v skladu je " + vertex.ToString();
                 platno.Invalidate();
 
 
@@ -258,6 +239,7 @@ namespace Dijsktra
             }
                else if (counter == 1)
             {
+
                 foreach (var h in helper)
                 {
                     DrawCircle(arg, Coords[h].X, Coords[h].Y, 20, 20, Color.Red);
@@ -268,7 +250,7 @@ namespace Dijsktra
 
                 //var xcor2 = Coords[vertex].X;
                 //var ycor2 = Coords[vertex].Y;
-                Pen pen = new Pen(Color.Orange, 5);
+                Pen pen = new Pen(Color.Yellow, 5);
 
                 c = (float)Math.Sqrt(Math.Pow(xcor2 - xcor, 2) + Math.Pow(ycor2 - ycor, 2));
                 x_delta = 10 * (xcor - xcor2) / c;
@@ -284,11 +266,10 @@ namespace Dijsktra
                 listBox1.Items.Add(vertex.ToString());
 
                 visited.Add(vertex);
-
-                listBox2.Items.Clear( );
+                neobiskani_sosedje.Clear();
                 foreach (var neighbor in AdjacencyList[vertex])
                 {
-
+                    
                     if (!visited.Contains(neighbor))
                     {
                         helper.Add(neighbor);
@@ -297,9 +278,21 @@ namespace Dijsktra
                         platno.Invalidate();
                         stack.Push(neighbor);
                         listBox3.Items.Add(neighbor.ToString());
-                        listBox2.Items.Add(neighbor.ToString());
-
+                        neobiskani_sosedje.Add(neighbor);
                     }
+
+                }
+                if(neobiskani_sosedje.Count == 0)
+                {
+                    richTextBox2.Text = "Vozlišče " + vertex.ToString() + " nima neobiskanih sosedov. \nNadaljujemo pri zadnjem dodanem vozlišču v skladu";
+                }
+                else if(neobiskani_sosedje.Count == 1)
+                {
+                    richTextBox2.Text += "\nNeobiskan sosed je " + string.Join(", ", neobiskani_sosedje.ToArray());
+                }
+                else
+                {
+                    richTextBox2.Text += "\nNeobiskani sosedje so " + string.Join(", ", neobiskani_sosedje.ToArray());
 
                 }
                 counter = 0;
@@ -312,7 +305,6 @@ namespace Dijsktra
                 AdjacencyList.Clear();
                 Coords.Clear();
                 listBox1.Items.Clear();
-                listBox2.Items.Clear();
                 var formPopup = new PopupForm2();
                 this.Hide();
                 formPopup.ShowDialog(this); 
@@ -333,7 +325,6 @@ namespace Dijsktra
             AdjacencyList.Clear();
             Coords.Clear();
             listBox1.Items.Clear();
-            listBox2.Items.Clear();
 
             start = 0;
             listBox1.Items.Clear();
@@ -344,7 +335,7 @@ namespace Dijsktra
             this.Invalidate();
         }
 
-        //Generate gumb
+        //Generiraj gumb
         public void button2_Click(object sender, EventArgs e)
         {
             Graphics g;
@@ -363,7 +354,6 @@ namespace Dijsktra
             AdjacencyList.Clear();
             Coords.Clear();
             listBox1.Items.Clear();
-            listBox2.Items.Clear();
             listBox3.Items.Clear();
 
             start = 0;
@@ -376,6 +366,7 @@ namespace Dijsktra
             listBox3.Items.Add(start);
             helper.Clear();
             counter = 0;
+            CoordStack.Clear();
 
             this.generate_graph(steviloVozlisc);
             this.draw_edges();

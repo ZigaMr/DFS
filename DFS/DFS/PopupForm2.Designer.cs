@@ -1,4 +1,4 @@
-﻿namespace Dijsktra
+﻿namespace DFS
 {
     partial class PopupForm2
     {

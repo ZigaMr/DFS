@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Dijsktra.Properties
+namespace DFS.Properties
 {
 
 
