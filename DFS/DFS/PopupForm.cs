@@ -32,7 +32,14 @@ namespace DFS
         public void button1_Click(object sender, EventArgs e)
         {
             //this.mainForm
-            Form1.steviloVozlisc = int.Parse(textBox1.Text);
+            try
+            {
+                Form1.steviloVozlisc = int.Parse(textBox1.Text);
+            }
+            catch
+            {
+                Form1.steviloVozlisc = 0;
+            }
             //Form1.steviloPovezav = int.Parse(textBox1.Text);
             //Form1.generate_graph(Form1.steviloVozlisc, Form1.steviloPovezav);
             this.Close();

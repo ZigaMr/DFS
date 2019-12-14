@@ -1,25 +1,18 @@
 ﻿using System;
-using System.IO;
 using System.Threading;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace DFS
 {
     public partial class Form1 : Form
     {
-
         Dictionary<int, List<int>> AdjacencyList = new Dictionary<int, List<int>>();
         public static ManualResetEvent mre = new ManualResetEvent(true);
 
         Point zadnjaLokacija;   //hrani zadnjo lokacijo miške
-        bool risem;             //stikalo za risanje
         List<Point> Coords = new List<Point>();
         Stack<int> stack = new Stack<int>();
         Stack<int> CoordStack = new Stack<int>();
@@ -38,7 +31,6 @@ namespace DFS
         public Form1()
         {
             InitializeComponent();
-            risem = false;
 
             // Povežemo dogodke z metodami
             dataGridView1.EnableHeadersVisualStyles = false;
@@ -214,7 +206,6 @@ namespace DFS
             return Coords.Count; 
         }
 
-           
         //Next gumb
         private void button3_Click(object sender, EventArgs e)
         {
@@ -446,7 +437,6 @@ namespace DFS
 
         private void pritiskMiske(object sender, MouseEventArgs e)
         {
-            risem = true;
             zadnjaLokacija = e.Location;
         }
     }
