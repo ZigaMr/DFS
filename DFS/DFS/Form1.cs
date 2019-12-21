@@ -9,16 +9,13 @@ namespace DFS
 {
     public partial class Form1 : Form
     {
-        Dictionary<int, List<int>> AdjacencyList = new Dictionary<int, List<int>>();
-        public static ManualResetEvent mre = new ManualResetEvent(true);
-
-        Point zadnjaLokacija;   //hrani zadnjo lokacijo miške
+        Dictionary<int, List<int>> SlovarSosedov = new Dictionary<int, List<int>>();//Slovar vozlišč in soležnih sosedov
         List<Point> Coords = new List<Point>();
-        Stack<int> stack = new Stack<int>();
-        Stack<int> CoordStack = new Stack<int>();
+        Stack<int> sklad = new Stack<int>();
+        //Stack<int> CoordStack = new Stack<int>();
 
         int start;
-        List<int> visited = new List<int>();
+        List<int> obiskani = new List<int>();
         List<int> neobiskani_sosedje = new List<int>();
         int xcor2, ycor2, ycor, xcor;
         int vertex;
@@ -55,7 +52,7 @@ namespace DFS
 
                 for (int c = 0; c < sirina; c++)
                 {
-                    if (AdjacencyList[r].Contains(c))
+                    if (SlovarSosedov[r].Contains(c))
                     {
                         row.Cells[c].Value = 1;
                     }
@@ -90,7 +87,6 @@ namespace DFS
         //Začetek gumb
         private void button1_Click(object sender, EventArgs e)
         {
-            string st_vozlisc;
             var formPopup = new PopupForm();
             this.Hide();
             formPopup.Show(this); // if you need non-modal window
@@ -124,11 +120,11 @@ namespace DFS
             int Y;
             int counter = 0;//counter-uporabimo, ker vcasih zmanjka prostora in se ustvari neskoncna zanka, 
                             //ki nikoli ne najde ustreznih vozlišč(ni prostora na canvas)
-            for (int i=0; i < steviloVozlisc; i++)
+            for (int i=0; i < stVozlisc; i++)
             {
 
-                X = 100 + (int)(200*(1+Math.Cos(2 * Math.PI * i / steviloVozlisc)));
-                Y = 100 + (int)(150*(1+Math.Sin(2 * Math.PI * i / steviloVozlisc)));
+                X = 100 + (int)(200*(1+Math.Cos(2 * Math.PI * i / stVozlisc)));
+                Y = 100 + (int)(150*(1+Math.Sin(2 * Math.PI * i / stVozlisc)));
 
                 counter = 1;
                 
@@ -150,7 +146,7 @@ namespace DFS
             PaintEventArgs arg = new PaintEventArgs(g, rectangle);
             for (int i = 0; i < Coords.Count(); i++)
             {
-                AdjacencyList[i] = new List<int>();
+                SlovarSosedov[i] = new List<int>();
             }
             for (int i = 0; i < Coords.Count(); i++)
             {
@@ -161,9 +157,9 @@ namespace DFS
                 int r1 = rnd.Next(0,possible.Count);
                 int r2 = 0;
 
-                if (!AdjacencyList[i].Contains(r1))
+                if (!SlovarSosedov[i].Contains(r1))
                 {
-                    AdjacencyList[i].Add(possible[r1]);
+                    SlovarSosedov[i].Add(possible[r1]);
                 }
 
                 int nxt = rnd.Next(0, 2);
@@ -172,24 +168,24 @@ namespace DFS
                     r2 = rnd.Next(0, possible.Count);
                 }
 
-                if (!AdjacencyList[i].Contains(r2))
+                if (!SlovarSosedov[i].Contains(r2))
                 {
-                    AdjacencyList[i].Add(possible[r2]);
+                    SlovarSosedov[i].Add(possible[r2]);
                 }
 
                 Pen pen = new Pen(Color.Green, 2);
 
-                foreach (var x in AdjacencyList[i])
+                foreach (var x in SlovarSosedov[i])
                 {
-                    if (!AdjacencyList[x].Contains(i))
+                    if (!SlovarSosedov[x].Contains(i))
                     {
-                        AdjacencyList[x].Add(i);
+                        SlovarSosedov[x].Add(i);
                     }
 
                 }
                 var xcor = Coords[i].X;
                 var ycor = Coords[i].Y;
-                foreach (var x in AdjacencyList[i])
+                foreach (var x in SlovarSosedov[i])
                 {
                     var xcor2 = Coords[x].X;
                     var ycor2 = Coords[x].Y;
@@ -234,7 +230,7 @@ namespace DFS
             }
             dataGridView1.ResumeLayout();
 
-            if (AdjacencyList.Count == 0)
+            if (SlovarSosedov.Count == 0)
             {
                 arg.Graphics.Clear(Color.White);
                 g.DrawString("Ni grafa", new Font("Arial", 32, FontStyle.Bold), Brushes.Black, new Point(200,300));
@@ -242,7 +238,7 @@ namespace DFS
                 return;
             }
 
-            if (counter == 0 & stack.Count > 0)
+            if (counter == 0 & sklad.Count > 0)
             {
 
                 neobiskani_sosedje.Clear();
@@ -250,33 +246,33 @@ namespace DFS
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X -5, Coords[vertex].Y - 5));
                 xcor = Coords[vertex].X;
                 ycor = Coords[vertex].Y;
-                CoordStack.Push(vertex);
-                vertex = stack.Pop();
+                //CoordStack.Push(vertex);
+                vertex = sklad.Pop();
                 listBox3.Items.RemoveAt(listBox3.Items.Count - 1);
                 richTextBox2.Text = "Naslednje vozlišče v skladu je " + vertex.ToString();
                 platno.Invalidate();
 
 
-                if (visited.Contains(vertex))
+                if (obiskani.Contains(vertex))
                     return;
 
-                CoordStack.Push(vertex);
+                //CoordStack.Push(vertex);
                 xcor2 = Coords[vertex].X;
                 ycor2 = Coords[vertex].Y;
                 Pen pen = new Pen(Color.Yellow, 5);
                 int i=0;
-                while (CoordStack.Count > 0)
-                {
-                    i = CoordStack.Pop();
-                    if (AdjacencyList[vertex].Contains(i))
-                    {
-                        break;
-                    }
-                }
+                //while (CoordStack.Count > 0)
+                //{
+                //    i = CoordStack.Pop();
+                //    if (SlovarSosedov[vertex].Contains(i))
+                //    {
+                //        break;
+                //    }
+                //}
                 xcor = Coords[i].X;
                 ycor = Coords[i].Y;
-                CoordStack.Push(i);
-                CoordStack.Push(vertex);
+                //CoordStack.Push(i);
+                //CoordStack.Push(vertex);
                 c = (float)Math.Sqrt(Math.Pow(xcor2 - xcor, 2) + Math.Pow(ycor2 - ycor, 2));
                 x_delta = 10 * (xcor - xcor2)/c;
                 y_delta = 10 * (ycor - ycor2)/c;
@@ -317,20 +313,20 @@ namespace DFS
 
                 listBox1.Items.Add(vertex.ToString());
 
-                visited.Add(vertex);
+                obiskani.Add(vertex);
                 neobiskani_sosedje.Clear();
                 dataGridView1.Rows[vertex].HeaderCell.Style.BackColor = Color.Red;
-                foreach (var neighbor in AdjacencyList[vertex])
+                foreach (var neighbor in SlovarSosedov[vertex])
                 {
                     
-                    if (!visited.Contains(neighbor))
+                    if (!obiskani.Contains(neighbor))
                     {
                         helper.Add(neighbor);
                         DrawCircle(arg, Coords[neighbor].X, Coords[neighbor].Y, 20, 20, Color.LightSeaGreen);
                         dataGridView1.Rows[vertex].Cells[neighbor].Style.BackColor = Color.LightSeaGreen;
                         g.DrawString(neighbor.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[neighbor].X - 5, Coords[neighbor].Y - 5));
                         platno.Invalidate();
-                        stack.Push(neighbor);
+                        sklad.Push(neighbor);
                         listBox3.Items.Add(neighbor.ToString());
                         neobiskani_sosedje.Add(neighbor);
                     }
@@ -357,7 +353,7 @@ namespace DFS
             {
                 arg.Graphics.Clear(Color.White);
                 this.Invalidate();
-                AdjacencyList.Clear();
+                SlovarSosedov.Clear();
                 Coords.Clear();
                 listBox1.Items.Clear();
                 var formPopup = new PopupForm2();
@@ -377,7 +373,7 @@ namespace DFS
             PaintEventArgs arg = new PaintEventArgs(g, rectangle);
             arg.Graphics.Clear(Color.White);
             this.Invalidate();
-            AdjacencyList.Clear();
+            SlovarSosedov.Clear();
             Coords.Clear();
             listBox1.Items.Clear();
 
@@ -385,8 +381,8 @@ namespace DFS
             listBox1.Items.Clear();
             Pen pen = new Pen(Color.Yellow, 5);
 
-            visited.Clear();
-            stack.Clear();
+            obiskani.Clear();
+            sklad.Clear();
             this.Invalidate();
         }
 
@@ -407,7 +403,7 @@ namespace DFS
                 return;
             }
             this.Invalidate();
-            AdjacencyList.Clear();
+            SlovarSosedov.Clear();
             Coords.Clear();
             listBox1.Items.Clear();
             listBox3.Items.Clear();
@@ -416,13 +412,13 @@ namespace DFS
             listBox1.Items.Clear();
             Pen pen = new Pen(Color.Yellow, 5);
             vertex = 0;
-            visited.Clear();
-            stack.Clear();
-            stack.Push(start);
+            obiskani.Clear();
+            sklad.Clear();
+            sklad.Push(start);
             listBox3.Items.Add(start);
             helper.Clear();
             counter = 0;
-            CoordStack.Clear();
+            //CoordStack.Clear();
 
             this.generate_graph(steviloVozlisc);
             int sirina = this.draw_edges();
@@ -437,7 +433,6 @@ namespace DFS
 
         private void pritiskMiske(object sender, MouseEventArgs e)
         {
-            zadnjaLokacija = e.Location;
         }
     }
 }
