@@ -12,7 +12,7 @@ namespace DFS
         Dictionary<int, List<int>> SlovarSosedov = new Dictionary<int, List<int>>();//Slovar vozlišč in soležnih sosedov
         List<Point> Coords = new List<Point>();
         Stack<int> sklad = new Stack<int>();
-        //Stack<int> CoordStack = new Stack<int>();
+        Stack<int> CoordStack = new Stack<int>();
 
         int start;
         List<int> obiskani = new List<int>();
@@ -55,6 +55,7 @@ namespace DFS
                     if (SlovarSosedov[r].Contains(c))
                     {
                         row.Cells[c].Value = 1;
+
                     }
                     
                 }
@@ -118,15 +119,12 @@ namespace DFS
 
             int X;
             int Y;
-            int counter = 0;//counter-uporabimo, ker vcasih zmanjka prostora in se ustvari neskoncna zanka, 
-                            //ki nikoli ne najde ustreznih vozlišč(ni prostora na canvas)
+
             for (int i=0; i < stVozlisc; i++)
             {
 
                 X = 100 + (int)(200*(1+Math.Cos(2 * Math.PI * i / stVozlisc)));
                 Y = 100 + (int)(150*(1+Math.Sin(2 * Math.PI * i / stVozlisc)));
-
-                counter = 1;
                 
                 DrawCircle(arg, X, Y, 20, 20, Color.Red);
                 Coords.Add(new Point(X, Y));
@@ -193,7 +191,6 @@ namespace DFS
                     x_delta = 10 * (xcor - xcor2) / c;
                     y_delta = 10 * (ycor - ycor2) / c;
                     arg.Graphics.DrawLine(pen, xcor - x_delta, ycor - y_delta, xcor2 + x_delta, ycor2 + y_delta);
-                    //arg.Graphics.DrawLine(pen, xcor, ycor, xcor2, ycor2);
                     platno.Invalidate();
                 }
 
@@ -246,7 +243,7 @@ namespace DFS
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X -5, Coords[vertex].Y - 5));
                 xcor = Coords[vertex].X;
                 ycor = Coords[vertex].Y;
-                //CoordStack.Push(vertex);
+                CoordStack.Push(vertex);
                 vertex = sklad.Pop();
                 listBox3.Items.RemoveAt(listBox3.Items.Count - 1);
                 richTextBox2.Text = "Naslednje vozlišče v skladu je " + vertex.ToString();
@@ -256,23 +253,23 @@ namespace DFS
                 if (obiskani.Contains(vertex))
                     return;
 
-                //CoordStack.Push(vertex);
+                CoordStack.Push(vertex);
                 xcor2 = Coords[vertex].X;
                 ycor2 = Coords[vertex].Y;
                 Pen pen = new Pen(Color.Yellow, 5);
                 int i=0;
-                //while (CoordStack.Count > 0)
-                //{
-                //    i = CoordStack.Pop();
-                //    if (SlovarSosedov[vertex].Contains(i))
-                //    {
-                //        break;
-                //    }
-                //}
+                while (CoordStack.Count > 0)
+                {
+                    i = CoordStack.Pop();
+                    if (SlovarSosedov[vertex].Contains(i))
+                    {
+                        break;
+                    }
+                }
                 xcor = Coords[i].X;
                 ycor = Coords[i].Y;
-                //CoordStack.Push(i);
-                //CoordStack.Push(vertex);
+                CoordStack.Push(i);
+                CoordStack.Push(vertex);
                 c = (float)Math.Sqrt(Math.Pow(xcor2 - xcor, 2) + Math.Pow(ycor2 - ycor, 2));
                 x_delta = 10 * (xcor - xcor2)/c;
                 y_delta = 10 * (ycor - ycor2)/c;
@@ -280,7 +277,6 @@ namespace DFS
                 dataGridView1.EnableHeadersVisualStyles = false;
                 dataGridView1.Rows[vertex].HeaderCell.Style.BackColor = Color.Red;
                 dataGridView1.Rows[i].Cells[vertex].Style.BackColor = Color.LightSkyBlue;
-                //DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Yellow);
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X - 5, Coords[vertex].Y - 5));
                 platno.Invalidate();
                 counter = 1;
@@ -296,15 +292,12 @@ namespace DFS
 
                 helper.Clear();
 
-                //var xcor2 = Coords[vertex].X;
-                //var ycor2 = Coords[vertex].Y;
                 Pen pen = new Pen(Color.Yellow, 5);
 
                 c = (float)Math.Sqrt(Math.Pow(xcor2 - xcor, 2) + Math.Pow(ycor2 - ycor, 2));
                 x_delta = 10 * (xcor - xcor2) / c;
                 y_delta = 10 * (ycor - ycor2) / c;
                 arg.Graphics.DrawLine(pen, xcor - x_delta, ycor - y_delta, Coords[vertex].X + x_delta, Coords[vertex].Y + y_delta);
-                //arg.Graphics.DrawLine(pen, xcor, ycor, Coords[vertex].X, Coords[vertex].Y);
 
                 DrawCircle(arg, Coords[vertex].X, Coords[vertex].Y, 20, 20, Color.Orange);
                 g.DrawString(vertex.ToString(), new Font("Arial", 12, FontStyle.Bold), Brushes.Black, new Point(Coords[vertex].X - 5, Coords[vertex].Y - 5));
@@ -418,7 +411,7 @@ namespace DFS
             listBox3.Items.Add(start);
             helper.Clear();
             counter = 0;
-            //CoordStack.Clear();
+            CoordStack.Clear();
 
             this.generate_graph(steviloVozlisc);
             int sirina = this.draw_edges();
