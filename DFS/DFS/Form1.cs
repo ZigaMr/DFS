@@ -424,8 +424,6 @@ namespace DFS
             platno.Invalidate();
         }
 
-        private void pritiskMiske(object sender, MouseEventArgs e)
-        {
-        }
+
     }
 }
